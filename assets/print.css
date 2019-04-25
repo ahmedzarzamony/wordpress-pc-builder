@@ -1,0 +1,190 @@
+.pcbuilder-table{
+    width:100%;
+    overflow: hidden;
+    border-radius: 10px;
+    padding: 10px;
+    box-shadow: 0 0 2px 0 #e2dddd;
+}
+.pcbuilder-table-co{
+    width:100%;
+    overflow: hidden;
+    margin: 20px auto;
+}
+.pcbuilder-table-head{
+    margin-bottom: 20px;
+    border-bottom: 1px solid #e6e6e6;
+}
+.pcbuilder-table-head .pcbuilder-table-item{
+    font-size: 16px;
+    font-weight: bold;
+    color:#999;
+}
+.pcbuilder-table-body .pcbuilder-table-item{
+    font-size: 14px;
+    padding-bottom: 10px;
+    border-bottom: 1px solid #f1f1f1;
+}
+.pcbuilder-table-item{
+    display: inline-block;
+    width:31%;
+    padding-left: 10px;
+    border-left: 1px solid #f1f1f1;
+}
+.pcbuilder-table-item.pcbuilder-3{
+    width:24%;
+}
+.pcbuilder-table-item.pcbuilder-6{
+    width:47%;
+
+}
+.pcbuilder-table-item span{
+    display: block;
+    color: #999;
+    font-size: 12px
+}
+.pcbuilder-table-foot{
+   margin-top:20px; 
+}
+.pcbuilder-table-foot div{
+    font-size: 14px;
+    font-weight: bold;
+}
+a.pcbuilder-table-add-btn {
+    font-size: 14px;
+    background: #696969;
+    color: #fff;
+    padding: 5px 10px;
+    border-radius: 4px;
+    text-decoration: none !important;
+    margin-bottom: 20px;
+    display: inline-block;
+}
+.pcbuilder-table-formco{
+    background: #f5f5f5;
+    padding: 20px;
+    border-radius: 5px;
+    position: fixed;
+    width:400px;
+    top:5%;
+    right:0;
+    left:0;
+    margin: auto;
+    position: relative;
+    overflow: hidden;
+}
+.pcbuilder-table-form{
+    position: fixed;
+    content: "";
+    top:0;
+    left:0;
+    width:100%;
+    height: 100%;
+    background: rgba(0,0,0,0.7);
+    z-index: 9999;
+    display: none;
+}
+.pcbuilder-table-form-item button{
+    margin-top:20px;
+    padding: 5px 25px;
+    font-size: 14px;
+    background: #fff;
+    color:#000;
+    border:1px solid #939191;
+    transition: all .5s;
+    cursor: pointer;
+}
+.pcbuilder-table-form-item button:hover{
+    box-shadow: inset 0 0 0 30px #000;
+    color:#fff;
+}
+.pcbuilder-table-form-item select{
+    width:100%;
+    appearance: none;
+    -webkit-appearance: none;
+    -o-appearance: none;
+    -moz-appearance: none;
+    border:1px solid #ddd;
+    padding: 10px 10px ;
+    font-size: 14px;
+    background: transparent url('down.png')no-repeat 95% 50%;
+}
+.pcbuilder-table-form-item label{
+    margin:15px 0;
+    font-size: 14px;
+    font-weight: bold;
+    display: block;
+    color:#666;
+}
+input.pcbuilder-price-clac {
+    border: none !important;
+    font-size: 12px;
+    padding: 0 !important;
+    margin: 0;
+}
+.pcbuilder-table-item a{
+    color:#222;
+    display: block;
+    text-decoration: none !important;
+    font-size: 15px;
+    box-shadow:none;
+}
+.pcbuilder-cf-show{
+    overflow: hidden;
+    margin: 20px 0;
+    clear:both;
+}
+.pcbuilder-cf-show h3{
+    margin: 20px 0 5px;
+    font-size: 12px;
+}
+.pcbuilder-cf-taxonomy,
+.pcbuilder-cf-price{
+    margin-bottom: 10px
+}
+.pcbuilder-cf-taxonomy span,
+.pcbuilder-cf-price span{
+    display: block;
+    margin-bottom: 0px;
+    color:#999;
+    font-size: 14px;
+}
+.pcbuilder-cf-taxonomy strong,
+.pcbuilder-cf-price strong,
+.pcbuilder-cf-spec label{
+    font-weight: normal;
+    font-size: 14px;
+    font-weight: 600;
+    margin-right: 10px;
+    color:#000;
+}
+.pcbuilder-cf-spec-co{
+    padding-left: 20px;
+}
+.pcbuilder-table-item{
+    position: relative;
+}
+.pcbuilder-table-item i{
+    position: absolute;
+    top:0;
+    left:0;
+    width:15px;
+    height: 15px;
+    background: #f00;
+    text-align: center;
+    line-height: 15px;
+    color:#fff;
+    border-radius: 4px;
+    opacity: 0;
+    cursor: pointer;
+    transition: all .5s;
+}
+.pcbuilder-table-item:hover i{
+    opacity: 1;
+}
+.pcbuilder-print-btn{
+    display: inline-block;
+    width:16px;
+    height: 16px;
+    background: transparent url(printer.png);
+    cursor: pointer;
+}

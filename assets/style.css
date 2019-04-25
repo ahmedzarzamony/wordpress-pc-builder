@@ -1,0 +1,78 @@
+.pcbuilder_pgen .pcg_item{
+    height:40px;
+}
+.pcg_item{
+    position:relative;
+    margin-bottom:10px;
+}
+.pcg_item select{
+    position:absolute;
+    top:6px;
+    left:40px;
+    border:1px solid #ddd;
+    -moz-appearance: none;
+    -o-appearance: none;
+    -webkit-appearance: none;
+    appearance: none;
+    border-radius:3px;
+    font-size:12px;
+    padding:0 15px;
+    width:110px;
+}
+.pcbuilder_pgen input{
+    text-indent:125px;
+}
+.pcbuilder_sgen textarea {
+    margin-top: 7px;
+    width: 80%;
+    height: 100px;
+    resize: none;
+}
+.pcbuilder_sgen .pcg_item {
+    padding-left:30px;
+}
+.pcg_item input{
+    padding:10px;
+    width:80%;
+}
+.pcbuilder_gen .button{
+    margin-bottom: 10px;
+}
+.pcbuilder_store{
+    display: none;
+}
+.pcg_item i {
+    display: inline-block;
+    width: 20px;
+    background: #cecccc;
+    text-align: center;
+    font-style: normal;
+    height: 20px;
+    transition: all .5s;
+    border-radius: 3px;
+    margin-right: 6px;
+    color: #fff;
+    cursor: pointer;
+}
+.pcg_item i:hover{
+    background: #f00;
+}
+.pcbuilder_sgen i{
+    position: absolute;
+    left:0;
+    top:10px;
+}
+.pcg_mainitem{
+    margin:20px 0;
+    border-bottom:1px solid #ddd;
+    padding-bottom:10px
+}
+.pcg_mainitem label{
+    display:block;
+    margin-bottom:7px;
+    font-weight:bold;
+}
+.pcg_mainitem input{
+    padding:10px;
+    width:85%;
+}
