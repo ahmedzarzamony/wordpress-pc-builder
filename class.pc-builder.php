@@ -36,6 +36,8 @@ class PCBUILDER{
         add_action( 'admin_init',['PCBUILDER', 'backStyle']);
         add_action( 'wp_enqueue_scripts', ['PCBUILDER', 'frontStyle'] );
         add_action( 'wp_ajax_call_pc_products', ['PCBUILDER', 'call_pc_products'] );
+        add_action( 'manage_edit-products_columns', ['PCBUILDER', 'showTaxonomyCols'] );
+        add_action( 'manage_posts_custom_column', ['PCBUILDER', 'showTaxonomyValuesForCols'] );
         //add_filter('single_template', ['PCBUILDER', 'productsSingeTemplate']);
         //add_filter('taxonomy_template', ['PCBUILDER', 'productsTaxonomyTemplate']);
     }
@@ -145,6 +147,31 @@ class PCBUILDER{
         }
         echo @json_encode($obj);
         wp_die();
+    }
+
+    public static function showTaxonomyValuesForCols($column ) {
+        if($column  == 'Brand') {
+            $brand = wp_get_post_terms(get_the_ID(), 'brands');
+            if(!empty($brand)){
+                echo $brand[0]->name;
+            }else{
+                echo '-';
+            }
+        }elseif($column  == 'Components') {
+            $component = wp_get_post_terms(get_the_ID(), 'components');
+            if(!empty($component)){
+                echo $component[0]->name;
+            }else{
+                echo '-';
+            }
+        }
+    }
+
+    public static function showTaxonomyCols($columns ) {
+        $columns['Brand'] = 'Brand';
+        $columns['Components'] = 'Components';
+        unset($columns['date']);
+        return $columns;
     }
 
     public static function productsSingeTemplate($single) {
