@@ -4,6 +4,7 @@ jQuery(function(){
         var sum = val = 0;
         jQuery('.pcbuilder-price-clac').each(function(){
             val = this.value.replace('USD', '')
+            val = isNaN(val) ? 0 : val; 
             sum += parseFloat(val);
         });
         jQuery('.pcbuilder-end-price').text(sum + 'USD');
@@ -22,7 +23,14 @@ jQuery(function(){
         item.pbrand = jQuery(this).closest('.pcbuilder-table-container').find('.pcbuilder-product option:selected').attr('data-brand');
         item.pprice = jQuery(this).closest('.pcbuilder-table-container').find('.pcbuilder-product option:selected').attr('data-price');
         item.purl = jQuery(this).closest('.pcbuilder-table-container').find('.pcbuilder-product option:selected').attr('data-url');
-        jQuery(this).closest('.pcbuilder-table-container').find('.pcbuilder-table-body').append('<div class="pcbuilder-table-row"><div class="pcbuilder-table-item pcbuilder-3"><i>&times;</i>'+item.comp+'</div><div class="pcbuilder-table-item pcbuilder-6"><span>'+item.pbrand+'</span><a href="'+item.purl+'" target="_blank">'+item.product+'</a></div><div class="pcbuilder-table-item pcbuilder-3"><input type="text" readonly class="pcbuilder-price-clac" value="'+item.pprice+'USD"></div><!-- pcbuilder-table-item --></div>');
+        if(item.product == null || item.product == 'undefined'){
+            jQuery(this).closest('.pcbuilder-table-container').find('.pcbuilder-product').attr('style', 'border-color:#8c0b0b')
+            return false;
+        }
+        item.pprice = (isNaN(item.pprice) || item.pprice == null || item.pprice == '') ? 0 : item.pprice;
+        
+        jQuery(this).closest('.pcbuilder-table-container').find('.pcbuilder-product').attr('style', '')
+        jQuery(this).closest('.pcbuilder-table-container').find('.pcbuilder-table-body').append('<div class="pcbuilder-table-row"><div class="pcbuilder-table-item pcbuilder-3"><i>&times;</i>'+item.comp+'</div><div class="pcbuilder-table-item pcbuilder-6"><span>'+item.pbrand+'</span><a href="'+item.purl+'" target="_blank">'+item.product+'</a></div><div class="pcbuilder-table-item pcbuilder-3"><input type="text" readonly class="pcbuilder-price-clac" value="'+parseFloat(item.pprice)+'USD"></div><!-- pcbuilder-table-item --></div>');
         pcbuilder_calcprice();
         jQuery(this).closest('.pcbuilder-table-container').find('.pcbuilder-table-form').fadeToggle(300);
     });
