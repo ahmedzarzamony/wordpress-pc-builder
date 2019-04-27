@@ -1,4 +1,10 @@
 
+@media print{
+    body{
+        display:none;
+    }
+}
+
 .pcbuilder-table{
     width:100%;
     overflow: hidden;

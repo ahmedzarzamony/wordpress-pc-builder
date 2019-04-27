@@ -31,12 +31,13 @@ jQuery(function(){
         pcbuilder_calcprice();
     });
     jQuery(document).on('click', '.pcbuilder-print-btn', function(e){
+        var print_style = '<link href="'+ajax_object.plugin_url+'assets/print.css" rel="stylesheet"><script src="'+ajax_object.plugin_url+'assets/print.js"></script>';
         var html  = jQuery(this).closest('.pcbuilder-table').html();
         var WinPrint = window.open('', '', 'left=0,top=0,width=800,height=900,toolbar=0,scrollbars=0,status=0');
-        WinPrint.document.write(html);
+        WinPrint.document.write(html+print_style);
         WinPrint.document.close();
         WinPrint.focus();
-        WinPrint.print();
+        //WinPrint.print();
         //WinPrint.close();
     });
 

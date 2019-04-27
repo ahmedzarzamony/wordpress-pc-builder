@@ -2,10 +2,13 @@
 
 class Shortcode {
     public static function render_table_shortcode( $atts ) {
-        extract( shortcode_atts( ['numbers' => '5'], $atts ) );
+        //extract( shortcode_atts( ['numbers' => '5'], $atts ) );
+        ob_start();
         $components = get_terms(['taxonomy'   => 'components', 'hide_empty' => false]);
         $components = array_map(function($com){ return $com->name; }, $components);
+        $front_css = plugins_url('assets/print.css',__FILE__ );
         include_once( PCBUILDER__PLUGIN_DIR . "/html/shortcode.table.php" );
+        return ob_get_clean();
     }
 
     public static function add_buttons( $plugin_array ) {
@@ -28,7 +31,7 @@ class Shortcode {
     }
 
     public static function init( $buttons ) {
-        add_shortcode( 'BCBUILDER-TABLE', [ 'Shortcode' , 'render_table_shortcode'] );
+        add_shortcode( 'PCBUILDER-TABLE', [ 'Shortcode' , 'render_table_shortcode'] );
         add_action( 'wp_ajax_my_ajax_request', 'handle_ajax_request' );
         add_action( 'wp_ajax_nopriv_my_ajax_request', 'handle_ajax_request' );
         add_filter( "mce_external_plugins", [ 'Shortcode' , 'add_buttons'] );

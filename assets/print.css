@@ -1,3 +1,4 @@
+
 .pcbuilder-table{
     width:100%;
     overflow: hidden;
@@ -31,7 +32,7 @@
     border-left: 1px solid #f1f1f1;
 }
 .pcbuilder-table-item.pcbuilder-3{
-    width:24%;
+    width:23%;
 }
 .pcbuilder-table-item.pcbuilder-6{
     width:47%;
@@ -182,9 +183,5 @@ input.pcbuilder-price-clac {
     opacity: 1;
 }
 .pcbuilder-print-btn{
-    display: inline-block;
-    width:16px;
-    height: 16px;
-    background: transparent url(printer.png);
-    cursor: pointer;
+    display: none;
 }

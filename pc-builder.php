@@ -1,6 +1,6 @@
 <?php
 /**
- * Plugin Name: Arab Hardware PC Builder
+ * Plugin Name: PC Builder
  * Plugin URI: #
  * Description: Choose all your specs to customize your budget, by pc builder you can add all pc products with it's brands.
  * Version: 1.0.0
