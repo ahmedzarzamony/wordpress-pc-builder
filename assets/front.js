@@ -23,7 +23,7 @@ jQuery(function(){
         item.pbrand = jQuery(this).closest('.pcbuilder-table-container').find('.pcbuilder-product option:selected').attr('data-brand');
         item.pprice = jQuery(this).closest('.pcbuilder-table-container').find('.pcbuilder-product option:selected').attr('data-price');
         item.purl = jQuery(this).closest('.pcbuilder-table-container').find('.pcbuilder-product option:selected').attr('data-url');
-        if(item.product == null || item.product == 'undefined'){
+        if(item.product == null || item.product == '' || item.product == 'undefined'){
             jQuery(this).closest('.pcbuilder-table-container').find('.pcbuilder-product').attr('style', 'border-color:#8c0b0b')
             return false;
         }
@@ -58,21 +58,23 @@ jQuery(function(){
         var that = this;
         // We can also pass the url value separately from ajaxurl for front end AJAX implementations
         jQuery.post(ajax_object.ajax_url, data, function(response) {
-            var data = JSON.parse(response);
-            var markup = '';   
-            var all_brands = [];         
-            data.forEach(function(brand){
-                if(jQuery.inArray( brand.brand, all_brands) == -1){
-                    markup+= '<optgroup label="'+brand.brand+'">';
-                    data.forEach(function(item){                    
-                        if(brand.brand == item.brand){
-                            markup+= '<option data-url="'+item.url+'" data-brand="'+item.brand+'" data-price="'+item.price+'" value="'+item.name+'">'+item.name+' ('+item.price+'USD)</option>';
-                        }
-                    })
-                    markup+= '</optgroup>';
-                    all_brands.push(brand.brand);
-                }
-            });
+            var markup = '<option value="">Found No Products.</option>';   
+            var all_brands = [];  
+            if(response != 0){
+                var data = JSON.parse(response);
+                data.forEach(function(brand){
+                    if(jQuery.inArray( brand.brand, all_brands) == -1){
+                        markup+= '<optgroup label="'+brand.brand+'">';
+                        data.forEach(function(item){                    
+                            if(brand.brand == item.brand){
+                                markup+= '<option data-url="'+item.url+'" data-brand="'+item.brand+'" data-price="'+item.price+'" value="'+item.name+'">'+item.name+' ('+item.price+'USD)</option>';
+                            }
+                        })
+                        markup+= '</optgroup>';
+                        all_brands.push(brand.brand);
+                    }
+                });     
+            }
             jQuery(that).closest('.pcbuilder-table-container').find('.pcbuilder-product').html(markup);
             
 

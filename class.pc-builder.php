@@ -128,7 +128,8 @@ class PCBUILDER{
     public static function call_pc_products() {
         $component = sanitize_text_field($_POST['component']);
         if($component == ''){
-            echo @json_encode([]);
+            echo 0;
+            wp_die();
         } 
         $data = new WP_Query([
                 'post_type' => 'products',
@@ -139,7 +140,8 @@ class PCBUILDER{
         );
         $obj = [];
 	    if(empty($data->posts)){
-            echo [];
+            echo 0;
+            wp_die();
         }else{
             $i = 0;
             foreach($data->posts as $post){
