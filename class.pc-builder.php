@@ -20,12 +20,7 @@ class PCBUILDER{
     }
     
     public static function pluginUninstall() {
-        /*$delete_post = array(
-            'post_type'     => 'products',
-            'name'    => $title,
-            'post_status'   => 'publish',
-            'post_author'   => $current_user->ID
-        );*/
+        
     }
 
     private static function init_hooks() {

@@ -11,7 +11,7 @@
          */
         init : function(ed, url) {
             ed.addCommand('pcbuilder_table', function() {
-                ed.execCommand('mceInsertContent', 0, '[BCBUILDER-TABLE]');
+                ed.execCommand('mceInsertContent', 0, '[PCBUILDER-TABLE]');
             });
             ed.addButton('pcbuilder_table', {
                 title : 'PC Products',
