@@ -20,7 +20,18 @@ class PCBUILDER{
     }
     
     public static function pluginUninstall() {
-        
+        global $wpdb;
+        $result = $wpdb->query( 
+            $wpdb->prepare("
+                DELETE posts,pt,pm
+                FROM wp_posts posts
+                LEFT JOIN wp_term_relationships pt ON pt.object_id = posts.ID
+                LEFT JOIN wp_postmeta pm ON pm.post_id = posts.ID
+                WHERE posts.post_type = %s
+                ", 
+                'products'
+            ) 
+        );
     }
 
     private static function init_hooks() {
