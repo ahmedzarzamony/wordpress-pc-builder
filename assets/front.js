@@ -58,7 +58,7 @@ jQuery(function(){
         var that = this;
         // We can also pass the url value separately from ajaxurl for front end AJAX implementations
         jQuery.post(ajax_object.ajax_url, data, function(response) {
-            var markup = '<option value="">Found No Products.</option>';   
+            var markup = '';   
             var all_brands = [];  
             if(response != 0){
                 var data = JSON.parse(response);
@@ -74,6 +74,8 @@ jQuery(function(){
                         all_brands.push(brand.brand);
                     }
                 });     
+            }else{
+                markup = '<option value="">Found No Products.</option>';
             }
             jQuery(that).closest('.pcbuilder-table-container').find('.pcbuilder-product').html(markup);
             
