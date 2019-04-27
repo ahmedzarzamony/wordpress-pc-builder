@@ -39,9 +39,12 @@ class PCBUILDER{
         self::registerProductsType();
         self::registerComponentsTaxonomy();
         self::registerBrandsTaxonomy();
+        self::registerPurposeTaxonomy();
+        self::registerExtraTaxonomy();
         add_action( 'admin_init',['PCBUILDER', 'backStyle']);
         add_action( 'wp_enqueue_scripts', ['PCBUILDER', 'frontStyle'] );
         add_action( 'wp_ajax_call_pc_products', ['PCBUILDER', 'call_pc_products'] );
+        add_action( 'wp_ajax_call_budget_products', ['PCBUILDER', 'callBudgetProducts'] );
         add_action( 'manage_edit-products_columns', ['PCBUILDER', 'showTaxonomyCols'] );
         add_action( 'manage_posts_custom_column', ['PCBUILDER', 'showTaxonomyValuesForCols'] );
         //add_filter('single_template', ['PCBUILDER', 'productsSingeTemplate']);
@@ -110,6 +113,42 @@ class PCBUILDER{
             ]
         ));
     }
+    
+
+    public static function registerPurposeTaxonomy(){
+        register_taxonomy('purpose', 'products', array(
+            'label' => 'Purpose',
+            'hierarchical' => true,
+            'parent_item'  => null,
+            'parent_item_colon' => null,
+            'labels' => [
+                'all_items'         => __( 'All Purpose', 'pc-builder-textdomain' ),
+                'edit_item'         => __( 'Edit Purpose', 'pc-builder-textdomain' ),
+                'update_item'       => __( 'Update Purpose', 'pc-builder-textdomain' ),
+                'add_new_item'      => __( 'Add New Purpose', 'pc-builder-textdomain' ),
+                'new_item_name'     => __( 'New Purpose Name', 'pc-builder-textdomain' ),
+                'menu_name'         => __( 'Purpose', 'pc-builder-textdomain' ),
+            ]
+        ));
+    }
+    
+
+    public static function registerExtraTaxonomy(){
+        register_taxonomy('extra', 'products', array(
+            'label' => 'Extra',
+            'hierarchical' => true,
+            'parent_item'  => null,
+            'parent_item_colon' => null,
+            'labels' => [
+                'all_items'         => __( 'All Extra', 'pc-builder-textdomain' ),
+                'edit_item'         => __( 'Edit Extra', 'pc-builder-textdomain' ),
+                'update_item'       => __( 'Update Extra', 'pc-builder-textdomain' ),
+                'add_new_item'      => __( 'Add New Extra', 'pc-builder-textdomain' ),
+                'new_item_name'     => __( 'New Extra Name', 'pc-builder-textdomain' ),
+                'menu_name'         => __( 'Extra', 'pc-builder-textdomain' ),
+            ]
+        ));
+    }
 
     public static function backStyle() {
         wp_register_style('PCBUILDER-CSS', plugins_url('assets/style.css',__FILE__ ));
@@ -122,7 +161,57 @@ class PCBUILDER{
         wp_register_style('PCBUILDER-CSS', plugins_url('assets/front.css',__FILE__ ));
         wp_enqueue_style('PCBUILDER-CSS');
         wp_enqueue_script( 'ajax-script', plugins_url('assets/front.js',__FILE__ ) , array('jquery') );
+        wp_enqueue_script( 'range-slider', plugins_url('assets/range.slider.js',__FILE__ ) , array('jquery') );
         wp_localize_script( 'ajax-script', 'ajax_object', array( 'ajax_url' => admin_url( 'admin-ajax.php'), 'plugin_url' => plugins_url('/',__FILE__ ) ) );
+    }
+
+    public static function callBudgetProducts() {
+        $data = (array)$_POST['data'];
+        if(!empty($data)){
+            $list = [];
+            foreach($data as $dt){
+                $list['purpose'] = sanitize_text_field($dt['purpose']);
+                $list['cpu'] = sanitize_text_field($dt['cpu']);
+                $list['gpu'] = sanitize_text_field($dt['gpu']);
+                $list['price'] = (float)$dt['price'];
+                $list['extra'] = sanitize_text_field($dt['extra']);
+            }
+
+            #============================================
+            #============================================
+            $data = new WP_Query([
+                    'post_type' => 'products',
+                    'tax_query' => [
+                        ['taxonomy' => 'components', 'terms' => 'CPU', 'field' => 'name' ]
+                    ]
+                ]
+            );
+            #============================================
+            #============================================
+            $obj = [];
+            if(empty($data->posts)){
+                echo 0;
+                wp_die();
+            }else{
+                $i = 0;
+                foreach($data->posts as $post){
+                    $brand = wp_get_post_terms($post->ID, 'brands');
+                    $components = wp_get_post_terms($post->ID, 'components');
+                    $obj[$i]['name'] = sanitize_text_field($post->post_title);
+                    $obj[$i]['url'] = get_post_permalink($post->ID);
+                    $obj[$i]['price']= (float)get_post_meta($post->ID, 'pcbuilder_mprice', true);
+                    $obj[$i]['brand'] = !empty($brand) ? sanitize_text_field($brand[0]->name) : 'Undefined';
+                    $obj[$i]['component'] = !empty($components) ? sanitize_text_field($components[0]->name) : 'Undefined';
+                    $i++;
+                }
+            }
+            echo @json_encode($obj);
+            #============================================
+            #============================================
+        }else{
+            echo 0;
+        }
+        wp_die();
     }
 
     public static function call_pc_products() {

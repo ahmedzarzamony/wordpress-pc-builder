@@ -1,12 +1,13 @@
 <div class="pcbuilder-table-container">
 <a href="#" class="pcbuilder-table-add-btn">Add New Item</a>
+<a href="#" class="pcbuilder-budget-add-btn">Build over Budget</a>
 
 <div class="pcbuilder-table-form">
     <div class="pcbuilder-table-formco">
         <div class="pcbuilder-table-form-item">
             <label for="">Component:</label>
             <select class="pcbuilder-component">
-                <option selected disabled value="">Component list</option>
+                <option selected disabled value="">Components list</option>
                 <?php 
                     if(!empty($components)){
                         foreach($components as $component){
@@ -28,6 +29,8 @@
         </div><!-- pcbuilder-table-form-item -->
     </div><!-- pcbuilder-table-formco -->
 </div><!-- pcbuilder-table-form -->
+
+<?php include_once("shortcode.budget.generator.php") ?>
 
 <div class="pcbuilder-table">
     <div class="pcbuilder-table-co">
