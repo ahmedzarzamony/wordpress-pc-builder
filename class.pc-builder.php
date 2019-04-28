@@ -166,7 +166,9 @@ class PCBUILDER{
         wp_localize_script( 'ajax-script', 'ajax_object', array( 
             'ajax_url' => admin_url( 'admin-ajax.php'), 
             'plugin_url' => plugins_url('/',__FILE__ ),
-            'max_extra' => PCBUILDER_MIN_BUDGET_FOR_EXTRA
+            'max_extra' => PCBUILDER_MIN_BUDGET_FOR_EXTRA,
+            'min_budget' => PCBUILDER_MIN_BUDGET,
+            'max_budget' => PCBUILDER_MAX_BUDGET
             ) );
     }
 

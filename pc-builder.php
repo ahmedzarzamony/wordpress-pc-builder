@@ -18,6 +18,8 @@ if (!function_exists( 'add_action')) {
 define( 'PCBUILDER_VERSION', '1.0.0' );
 define( 'PCBUILDER__PLUGIN_DIR', plugin_dir_path( __FILE__ ) ); 
 define( 'PCBUILDER_MIN_BUDGET_FOR_EXTRA', 1000 ); 
+define( 'PCBUILDER_MIN_BUDGET', 400 ); 
+define( 'PCBUILDER_MAX_BUDGET', 5000 ); 
 
 $pcbuilder_groups = [
 	'CPU' => 'CPU',
