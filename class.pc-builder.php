@@ -49,6 +49,7 @@ class PCBUILDER{
         add_action( 'manage_posts_custom_column', ['PCBUILDER', 'showTaxonomyValuesForCols'] );
         //add_filter('single_template', ['PCBUILDER', 'productsSingeTemplate']);
         //add_filter('taxonomy_template', ['PCBUILDER', 'productsTaxonomyTemplate']);
+        flush_rewrite_rules();
     }
     
     public static function registerProductsType() {
@@ -162,50 +163,196 @@ class PCBUILDER{
         wp_enqueue_style('PCBUILDER-CSS');
         wp_enqueue_script( 'ajax-script', plugins_url('assets/front.js',__FILE__ ) , array('jquery') );
         wp_enqueue_script( 'range-slider', plugins_url('assets/range.slider.js',__FILE__ ) , array('jquery') );
-        wp_localize_script( 'ajax-script', 'ajax_object', array( 'ajax_url' => admin_url( 'admin-ajax.php'), 'plugin_url' => plugins_url('/',__FILE__ ) ) );
+        wp_localize_script( 'ajax-script', 'ajax_object', array( 
+            'ajax_url' => admin_url( 'admin-ajax.php'), 
+            'plugin_url' => plugins_url('/',__FILE__ ),
+            'max_extra' => PCBUILDER_MIN_BUDGET_FOR_EXTRA
+            ) );
+    }
+
+    public static function getMinPrice($arr, $key = 'price') {
+        $arr_min = min(array_column($arr, $key));
+        $min = array_filter($arr, function ($item)use($key, $arr_min) {
+            return ($arr_min == $item[$key]);
+        });
+        $first = array_keys($min)[0];
+        return (array)$min[$first];
     }
 
     public static function callBudgetProducts() {
         $data = (array)$_POST['data'];
         if(!empty($data)){
-            $list = [];
-            foreach($data as $dt){
-                $list['purpose'] = sanitize_text_field($dt['purpose']);
-                $list['cpu'] = sanitize_text_field($dt['cpu']);
-                $list['gpu'] = sanitize_text_field($dt['gpu']);
-                $list['price'] = (float)$dt['price'];
-                $list['extra'] = sanitize_text_field($dt['extra']);
+            if(!isset($data['price']) or (float)$data['price'] == 0){
+                echo 0;
+                wp_die();
             }
 
+            /**
+             * clean income fields
+             */
+            $list = new stdClass;
+            $list->purpose = '';
+            if(isset($data['purpose']))
+                $list->purpose = sanitize_text_field($data['purpose']);
+            $list->cpu = '';
+            if(isset($data['cpu']))
+                $list->cpu = sanitize_text_field($data['cpu']);
+            $list->gpu = '';
+            if(isset($data['gpu']))
+                $list->gpu = sanitize_text_field($data['gpu']);
+            $list->price = 0;
+            if(isset($data['price'])){
+                $list_price = (int)$data['price'];
+                $list->price = $list_price + (int)($list_price * (10/100));
+            }
+            $list->extra = '';
+            if(isset($data['extra']))
+                $list->extra = sanitize_text_field($data['extra']);
             #============================================
             #============================================
-            $data = new WP_Query([
-                    'post_type' => 'products',
-                    'tax_query' => [
-                        ['taxonomy' => 'components', 'terms' => 'CPU', 'field' => 'name' ]
+            //$tax_query = ['relation' => 'AND'];
+            /*if($list->purpose != ''){
+                $tax_purpose = [
+                    'taxonomy' => 'purpose',                
+                    'field' => 'name',                    
+                    'terms' => $list->purpose,
+                    'operator' => 'IN'    
+                ];
+                $tax_query[] = $tax_purpose ;
+            }
+            if($list->extra != ''){
+                $tax_extra = [
+                    'taxonomy' => 'extra',                
+                    'field' => 'name',                    
+                    'terms' => $list->extra,
+                    'operator' => 'IN'    
+                ];
+                $tax_query[] = $tax_extra ;
+            }*/
+
+            /**
+             * query all products based on income price/2, the reason for divide on 2 is becouse noway one component deserve half of full budget
+             */
+            $args = [
+                'post_type' => 'products',
+                //'tax_query' => $tax_query,
+                'meta_query' => [
+                    [
+                        'key' => 'pcbuilder_mprice',
+                        'compare' => '<=',
+                        'value' => $list->price/2,
+                        'type' => 'NUMERIC'
                     ]
                 ]
-            );
+            ];
+            $query = new WP_Query($args);
+            $products = [];
+            if(!empty($query->posts)){
+                foreach($query->posts as $post){
+                    // Get Component
+                    $component = get_the_terms( $post->ID, 'components' );
+                    if(!empty($component)){
+                        $component = @get_term_meta($component[0]->term_id, 'component_type', true);
+                        if(trim($component) == '')
+                        continue;
+                    }
+                    // Get Brand
+                    $brand = get_the_terms( $post->ID, 'brands' );
+                    $brand = empty($brand) ? '' : $brand[0]->name;
+                    // Get Purpose
+                    $purpose = get_the_terms( $post->ID, 'purpose' );
+                    $purpose = empty($purpose) ? '' : $purpose[0]->name;
+                    // Get Extra
+                    $extra = get_the_terms( $post->ID, 'extra' );
+                    $extra = empty($extra) ? '' : $extra[0]->name;
+                    #==========================================================
+                    #========= Build Blueprint Object
+                    #==========================================================
+                    /**
+                     * Each product that match past steps will append into it's type group
+                     */
+                    if($component == 'CPU' && trim($list->cpu) != ''){
+                        if($brand != $list->cpu){
+                            continue;
+                        }
+                    } 
+                    if($component == 'GPU' && trim($list->gpu) != ''){
+                        if($brand != $list->gpu){
+                            continue;
+                        }
+                    }  
+                    if(in_array($component, ['GPU', 'CPU', 'RAM'])){
+                        if(trim($list->purpose) != ''){
+                            if($purpose != $list->purpose){
+                                continue;
+                            }
+                        } 
+                        if($list->price >= PCBUILDER_MIN_BUDGET_FOR_EXTRA && trim($list->extra) != ''){
+                            if($extra != $list->extra){
+                                continue;
+                            }
+                        }
+                    }
+                    $products[$component][] = [
+                        'id' => $post->ID,
+                        'name' => $post->post_title,
+                        'price' => (float)get_post_meta($post->ID, 'pcbuilder_mprice', true),
+                        'component' => $component,
+                        'brand' => $brand,
+                        'purpse' => $purpose,
+                        'extra' => $extra,
+                        'url' => get_post_permalink($post->ID),
+                    ];
+
+                }
+            }
+            //print_r($products);wp_die();
+            if(empty($query->posts) || empty($products)){
+                echo 0;
+                wp_die();
+            }
+            global $pcbuilder_groups;
+            $pcbuilder_groups_keys = array_keys($pcbuilder_groups);
+            $products_keys = array_keys($products);
+            $blueprinted = [];
+
+            foreach($pcbuilder_groups_keys as $key){
+                if(in_array($key, $products_keys)){
+                        $blueprinted[$key] = [
+                            'status' => 1,
+                            'list' => self::getMinPrice($products[$key])
+                        ];
+                }else{
+                    $blueprinted[$key] = [
+                        'status' => 0,
+                        'message' => 'It doesn\'t match any products in current Budget'
+                    ];
+                }
+            }
             #============================================
             #============================================
             $obj = [];
-            if(empty($data->posts)){
+            if(empty($blueprinted)){
                 echo 0;
                 wp_die();
             }else{
                 $i = 0;
-                foreach($data->posts as $post){
-                    $brand = wp_get_post_terms($post->ID, 'brands');
-                    $components = wp_get_post_terms($post->ID, 'components');
-                    $obj[$i]['name'] = sanitize_text_field($post->post_title);
-                    $obj[$i]['url'] = get_post_permalink($post->ID);
-                    $obj[$i]['price']= (float)get_post_meta($post->ID, 'pcbuilder_mprice', true);
-                    $obj[$i]['brand'] = !empty($brand) ? sanitize_text_field($brand[0]->name) : 'Undefined';
-                    $obj[$i]['component'] = !empty($components) ? sanitize_text_field($components[0]->name) : 'Undefined';
+                foreach($blueprinted as $com => $product){
+                    $obj[$i]['status'] = $product['status'];
+                    $obj[$i]['component'] = $com;
+                    if($product['status']){
+                        $obj[$i]['name'] = $product['list']['name'];
+                        $obj[$i]['url'] = $product['list']['url'];
+                        $obj[$i]['price']= $product['list']['price'];
+                        $obj[$i]['brand'] = $product['list']['brand'];
+                    }else{
+                        $obj[$i]['message'] = $product['message'];
+                    }
                     $i++;
                 }
             }
             echo @json_encode($obj);
+            unset($obj, $blueprinted, $products, $pcbuilder_groups_keys, $products_keys, $list, $component, $purpose, $brand, $extra, $data);
             #============================================
             #============================================
         }else{

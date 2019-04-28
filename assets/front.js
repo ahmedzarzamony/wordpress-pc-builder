@@ -18,7 +18,7 @@ jQuery(function(){
 
     jQuery('.pc-builder-budget input[type=range]').on('input', function(e){
         var val = jQuery(this).val()
-        if(Number(val) >= 1000){
+        if(Number(val) >= ajax_object.max_extra){
             jQuery(this).closest('.pcbuilder-table-container').find('select.pcbuilder-extra').attr('disabled', false)
         }else{
             jQuery(this).closest('.pcbuilder-table-container').find('select.pcbuilder-extra').attr('disabled', true)
@@ -49,13 +49,16 @@ jQuery(function(){
             if(response != 0){
                 var data = JSON.parse(response);
                 data.forEach(function(item){
-                    console.table(item)
-                    markup += '<div class="pcbuilder-table-row"><div class="pcbuilder-table-item pcbuilder-3"><i>&times;</i>'+item.component+'</div><div class="pcbuilder-table-item pcbuilder-6"><span>'+item.brand+'</span><a href="'+item.url+'" target="_blank">'+item.name+'</a></div><div class="pcbuilder-table-item pcbuilder-3"><input type="text" readonly class="pcbuilder-price-clac" value="'+parseFloat(item.price)+'USD"></div><!-- pcbuilder-table-item --></div>';
+                    if(item.status){
+                        markup += '<div class="pcbuilder-table-row"><div class="pcbuilder-table-item pcbuilder-3"><span>&nbsp;</span>'+item.component+'</div><div class="pcbuilder-table-item pcbuilder-6"><span>'+item.brand+'</span><a href="'+item.url+'" target="_blank">'+item.name+'</a></div><div class="pcbuilder-table-item pcbuilder-3"><input type="text" readonly class="pcbuilder-price-clac" value="'+parseFloat(item.price)+'USD"></div><!-- pcbuilder-table-item --></div>';
+                    }else{
+                        markup += '<div class="pcbuilder-table-row"><div class="pcbuilder-table-item pcbuilder-3"><span>&nbsp;</span>'+item.component+'</div><div class="pcbuilder-table-item pcbuilder-9 pcbuilder-p"><span>&nbsp;</span>'+item.message+'</div></div><!-- pcbuilder-table-item --></div>';
+                    }
                 });     
             }else{
                 markup = '<p class="pc-builder-nodata">Sorry, No Data.</p>';
             }
-            jQuery(that).closest('.pcbuilder-table-container').find('.pcbuilder-table-body').append(markup);
+            jQuery(that).closest('.pcbuilder-table-container').find('.pcbuilder-table-body').html(markup);
             jQuery(that).closest('.pcbuilder-table-container').find('.pcbuilder-budget-form').fadeToggle(300);
             pcbuilder_calcprice();
         });

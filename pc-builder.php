@@ -17,7 +17,16 @@ if (!function_exists( 'add_action')) {
 
 define( 'PCBUILDER_VERSION', '1.0.0' );
 define( 'PCBUILDER__PLUGIN_DIR', plugin_dir_path( __FILE__ ) ); 
+define( 'PCBUILDER_MIN_BUDGET_FOR_EXTRA', 1000 ); 
 
+$pcbuilder_groups = [
+	'CPU' => 'CPU',
+	'GPU' => 'GPU',
+	'RAM' => 'RAM',
+	'MB' => 'MB',
+	'HDD' => 'HDD',
+	'PSU' => 'PSU',
+];
 
 register_activation_hook( __FILE__, ['PCBUILDER', 'pluginActivation'] );
 register_deactivation_hook( __FILE__, ['PCBUILDER', 'pluginDeactivation'] );

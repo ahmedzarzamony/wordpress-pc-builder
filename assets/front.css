@@ -38,6 +38,10 @@
     width:47%;
 
 }
+.pcbuilder-table-item.pcbuilder-9{
+    width:70%;
+
+}
 .pcbuilder-table-item span{
     display: block;
     color: #999;
@@ -289,9 +293,9 @@ input.pcbuilder-price-clac {
 select.pcbuilder-extra:disabled {
     color: #ddd;
 }
-p.pc-builder-nodata {
+p.pc-builder-nodata, .pcbuilder-p {
     color: #999;
-    font-size: 12px;
+    font-size: 12px !important;
     text-align: center;
 }
 

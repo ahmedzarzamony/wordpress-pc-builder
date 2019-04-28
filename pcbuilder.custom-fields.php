@@ -144,10 +144,12 @@ HTML;
     }
     
     public static function componentsAddTaxonomyCustomFields() {
+        global $pcbuilder_groups;
         include_once( PCBUILDER__PLUGIN_DIR . "/html/componentsbox.add.php" );
     }
     
     public static function componentsEditTaxonomyCustomFields( $term ) {
+        global $pcbuilder_groups;
         $component_type = @get_term_meta($term->term_id, 'component_type', true);
         include_once( PCBUILDER__PLUGIN_DIR . "/html/componentsbox.edit.php" );
     }

@@ -55,7 +55,7 @@
         <div class="pcbuilder-budget-form-item">
             <label for="">Extra options:</label>
             <select class="pcbuilder-extra" disabled>
-                <option selected disabled value="">Extra List</option>
+                <option selected value="">Extra List</option>
                 <?php 
                     if(!empty($extras)){
                         foreach($extras as $extra){
