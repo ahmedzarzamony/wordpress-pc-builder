@@ -48,7 +48,7 @@
         <div class="pcbuilder-budget-form-item">
             <div class="pc-builder-budget">
                 <input tyupe="text" readonly class="pcbuilder-slider-val" />
-                <input type="range" min="<?= PCBUILDER_MIN_BUDGET ?>" max="<?= PCBUILDER_MIN_BUDGET ?>" value="<?= PCBUILDER_MAX_BUDGET ?>" data-rangeslider>
+                <input type="range" min="<?= PCBUILDER_MIN_BUDGET ?>" max="<?= PCBUILDER_MAX_BUDGET ?>" value="600" data-rangeslider>
             </div>
         </div><!-- pcbuilder-budget-form-item -->
         
